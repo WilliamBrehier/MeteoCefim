@@ -31,7 +31,6 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
         View v = LayoutInflater.from(mContext).inflate(R.layout.item_favorite_city, parent, false);
 
         ViewHolder viewHolder = new ViewHolder(v);
-        viewHolder.mAdapter = this;
 
         return viewHolder;
     }
@@ -57,7 +56,6 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
         private TextView mTextViewCityDescription;
         private TextView mTextViewCityTemperature;
         private ImageView mImageViewCityIcon;
-        private FavoriteAdapter mAdapter;
         public City mCity;
         public ViewHolder(View view) {
             super(view);
@@ -78,7 +76,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
             builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     mCities.remove(mCity);
-                    mAdapter.notifyDataSetChanged();
+                    notifyDataSetChanged();
                 }
             });
             builder.create().show();
