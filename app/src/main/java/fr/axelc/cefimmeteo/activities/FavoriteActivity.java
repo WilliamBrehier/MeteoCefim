@@ -1,8 +1,14 @@
 package fr.axelc.cefimmeteo.activities;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.google.android.material.snackbar.Snackbar;
@@ -10,6 +16,7 @@ import fr.axelc.cefimmeteo.R;
 import fr.axelc.cefimmeteo.adapters.FavoriteAdapter;
 import fr.axelc.cefimmeteo.databinding.ActivityFavoriteBinding;
 import fr.axelc.cefimmeteo.models.City;
+import fr.axelc.cefimmeteo.utils.Util;
 
 import java.util.ArrayList;
 
@@ -31,8 +38,19 @@ public class FavoriteActivity extends AppCompatActivity {
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                View v = LayoutInflater.from(mContext).inflate(R.layout.dialog_add_favorite, null);
+                final EditText editTextCity = (EditText) v.findViewById(R.id.edit_text_dialog_city);
+                builder.setView(v);
+
+                builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        if (editTextCity.getText().toString().length() > 0) {
+                            updateWeatherDataCityName(editTextCity.getText().toString());
+                        }
+                    }
+                });
+                builder.create().show();
             }
         });
 
@@ -46,17 +64,15 @@ public class FavoriteActivity extends AppCompatActivity {
         mCities.add(city2);
         mCities.add(city3);
         mCities.add(city4);
-        mCities.add(city1);
-        mCities.add(city2);
-        mCities.add(city3);
-        mCities.add(city4);
-        mCities.add(city1);
-        mCities.add(city2);
-        mCities.add(city3);
-        mCities.add(city4);
 
         binding.included.recyclerViewCities.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new FavoriteAdapter(mContext, mCities);
         binding.included.recyclerViewCities.setAdapter(mAdapter);
+    }
+
+    public void updateWeatherDataCityName(final String cityName) {
+        City city = new City(cityName, "Ensoleillé", "28°C", R.drawable.weather_sunny_grey);
+        mCities.add(city);
+        mAdapter.notifyDataSetChanged();
     }
 }
