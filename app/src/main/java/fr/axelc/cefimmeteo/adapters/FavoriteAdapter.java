@@ -84,11 +84,3 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
         }
     }
 }
-
-//    private View.OnLongClickListener mOnLongClickListener = new View.OnLongClickListener() {
-//        @Override
-//        public boolean onLongClick(View view) {
-//            Log.d("test", mC);
-//            return false;
-//        }
-//    };
