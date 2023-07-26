@@ -56,5 +56,36 @@ public class Util {
         return icon;
     }
 
+    public static int setWeatherIcon(int actualId) {
+
+        int id = actualId / 100;
+        int icon = R.drawable.weather_sunny_grey;
+
+        if (actualId != 800) {
+            switch (id) {
+                case 2:
+                    icon = R.drawable.weather_thunder_grey;
+                    break;
+                case 3:
+                    icon = R.drawable.weather_drizzle_grey;
+                    break;
+                case 7:
+                    icon = R.drawable.weather_foggy_grey;
+                    break;
+                case 8:
+                    icon = R.drawable.weather_cloudy_grey;
+                    break;
+                case 6:
+                    icon = R.drawable.weather_snowy_grey;
+                    break;
+                case 5:
+                    icon = R.drawable.weather_rainy_grey;
+                    break;
+            }
+        }
+
+        return icon;
+    }
+
 
 }

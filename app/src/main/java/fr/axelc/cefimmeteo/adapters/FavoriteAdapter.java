@@ -1,5 +1,7 @@
 package fr.axelc.cefimmeteo.adapters;
 
+import static fr.axelc.cefimmeteo.utils.Util.setWeatherIcon;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,16 +15,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import fr.axelc.cefimmeteo.R;
 import fr.axelc.cefimmeteo.models.City;
+import fr.axelc.cefimmeteo.models.CityApi;
+import fr.axelc.cefimmeteo.utils.Util;
 
 import java.util.ArrayList;
 
 public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHolder> {
     private Context mContext;
-    private ArrayList<City> mCities;
+    private ArrayList<CityApi> mCitiesApi;
 
-    public FavoriteAdapter(Context mContext, ArrayList<City> mCities) {
+    public FavoriteAdapter(Context mContext, ArrayList<CityApi> mCitiesApi) {
         this.mContext = mContext;
-        this.mCities = mCities;
+        this.mCitiesApi = mCitiesApi;
     }
 
     @NonNull
@@ -38,17 +42,20 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        City city = mCities.get(position);
-        holder.mCity = city;
-        holder.mTextViewCityName.setText(city.getmName());
-        holder.mTextViewCityDescription.setText(city.getmDescription());
-        holder.mTextViewCityTemperature.setText(city.getmTemperature());
-        holder.mImageViewCityIcon.setImageResource(city.getmWeatherIcon());
+        CityApi cityApi = mCitiesApi.get(position);
+        holder.mCityApi = cityApi;
+        holder.mTextViewCityName.setText(cityApi.getName());
+        holder.mTextViewCityDescription.setText(cityApi.getWeather().get(0).getDescription());
+        holder.mTextViewCityTemperature.setText(Double.toString(cityApi.getMain().getTemp()));
+        int actualId = cityApi.getWeather().get(0).getId();
+        long sunrise = cityApi.getSys().getSunrise();
+        long sunset = cityApi.getSys().getSunset();
+        holder.mImageViewCityIcon.setImageResource(Util.setWeatherIcon(actualId));
     }
 
     @Override
     public int getItemCount() {
-        return mCities.size();
+        return mCitiesApi.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
@@ -56,7 +63,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
         private TextView mTextViewCityDescription;
         private TextView mTextViewCityTemperature;
         private ImageView mImageViewCityIcon;
-        public City mCity;
+        public CityApi mCityApi;
         public ViewHolder(View view) {
             super(view);
             mTextViewCityName = view.findViewById(R.id.city_name);
@@ -68,14 +75,12 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
 
         @Override
         public boolean onLongClick(View view) {
-            Log.d("test", mCity.getmName());
-
             final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-            builder.setMessage("Supprimer " + mCity.getmName() + " ?");
+            builder.setMessage("Supprimer " + mCityApi.getName() + " ?");
 
             builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    mCities.remove(mCity);
+                    mCitiesApi.remove(mCityApi);
                     notifyDataSetChanged();
                 }
             });
